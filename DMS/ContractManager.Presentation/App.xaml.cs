@@ -7,6 +7,9 @@ using ContractManager.Infrastructure.Repositories;
 using ContractManager.Presentation.ViewModels;
 using System;
 using Microsoft.EntityFrameworkCore;
+using ContractManager.Application.Configuration;
+using ContractManager.Infrastructure.Storage;
+using ContractManager.Infrastructure.Services;
 
 namespace ContractManager.Presentation
 {
@@ -57,6 +60,15 @@ namespace ContractManager.Presentation
             services.AddScoped<IContractService, ContractService>();
             services.AddTransient<MainViewModel>();
             services.AddTransient<MainWindow>();
+            var storageOptions = new FileStorageOptions
+            {
+                RootPath = System.IO.Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "DMSStorage")
+            };
+            services.AddSingleton(storageOptions);
+            services.AddSingleton<IFileStorageService, FileStorageService>();
+            services.AddScoped<IAttachmentService, AttachmentService>();
         }
     }
 }
