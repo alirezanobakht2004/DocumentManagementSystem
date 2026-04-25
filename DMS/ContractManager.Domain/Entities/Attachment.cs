@@ -4,13 +4,18 @@ namespace ContractManager.Domain.Entities
 {
     public class Attachment : BaseEntity
     {
-        public string FileName { get; set; } = string.Empty;
-        public string FileExtension { get; set; } = string.Empty; // مثلا .pdf یا .jpg
-        public string RelativePath { get; set; } = string.Empty; // مسیر فایل در هارد دیسک
-        public long FileSize { get; set; }
+        public int ContractId { get; set; }
+        public Contract? Contract { get; set; }
 
-        // ارتباط چندریختی (Polymorphic)
-        public EntityType RelatedEntityType { get; set; } // مثلا ContractMeeting یا ContractTest
+        // Polymorphic Relations
+        public EntityType RelatedEntityType { get; set; }
         public int RelatedEntityId { get; set; }
+
+        public string FilePath { get; set; } = string.Empty; // مسیر روی دیسک
+        public string FileType { get; set; } = string.Empty; // pdf, jpg, ...
+        public long FileSize { get; set; }
+        public bool HasOCR { get; set; }
+
+        public OCRResult? OCRResult { get; set; }
     }
 }

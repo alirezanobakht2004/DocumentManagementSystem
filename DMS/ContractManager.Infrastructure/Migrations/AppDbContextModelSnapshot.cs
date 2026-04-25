@@ -23,18 +23,24 @@ namespace ContractManager.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ContractId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("FileExtension")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FileName")
+                    b.Property<string>("FilePath")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<long>("FileSize")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("HasOCR")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("RelatedEntityId")
@@ -43,14 +49,12 @@ namespace ContractManager.Infrastructure.Migrations
                     b.Property<int>("RelatedEntityType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("RelativePath")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
 
                     b.HasIndex("RelatedEntityType", "RelatedEntityId");
 
@@ -63,16 +67,25 @@ namespace ContractManager.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("BaseList")
-                        .IsRequired()
+                    b.Property<string>("BaseContractReference")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("ContractAmount")
+                    b.Property<string>("BaseListReference")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ContractCoefficients")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ContractNumber")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("ContractTitle")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ContractYear")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ContractorName")
                         .IsRequired()
@@ -81,22 +94,20 @@ namespace ContractManager.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Factors")
-                        .IsRequired()
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsInitialContract")
+                    b.Property<decimal>("InitialAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -135,6 +146,8 @@ namespace ContractManager.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContractId");
+
                     b.ToTable("ContractCorrespondences");
                 });
 
@@ -164,6 +177,8 @@ namespace ContractManager.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
 
                     b.ToTable("ContractDeliveries");
                 });
@@ -195,6 +210,8 @@ namespace ContractManager.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
 
                     b.ToTable("ContractDutyReleases");
                 });
@@ -229,6 +246,8 @@ namespace ContractManager.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContractId");
+
                     b.ToTable("ContractFinancialStatements");
                 });
 
@@ -248,23 +267,20 @@ namespace ContractManager.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LetterNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("MeetingDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("MeetingType")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
 
                     b.ToTable("ContractMeetings");
                 });
@@ -297,6 +313,8 @@ namespace ContractManager.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContractId");
+
                     b.ToTable("ContractTests");
                 });
 
@@ -328,18 +346,108 @@ namespace ContractManager.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttachmentId");
+                    b.HasIndex("AttachmentId")
+                        .IsUnique();
 
                     b.ToTable("OCRResults");
                 });
 
-            modelBuilder.Entity("ContractManager.Domain.Entities.OCRResult", b =>
+            modelBuilder.Entity("ContractManager.Domain.Entities.Attachment", b =>
                 {
-                    b.HasOne("ContractManager.Domain.Entities.Attachment", null)
+                    b.HasOne("ContractManager.Domain.Entities.Contract", "Contract")
                         .WithMany()
-                        .HasForeignKey("AttachmentId")
+                        .HasForeignKey("ContractId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Contract");
+                });
+
+            modelBuilder.Entity("ContractManager.Domain.Entities.ContractCorrespondence", b =>
+                {
+                    b.HasOne("ContractManager.Domain.Entities.Contract", null)
+                        .WithMany("Correspondences")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ContractManager.Domain.Entities.ContractDelivery", b =>
+                {
+                    b.HasOne("ContractManager.Domain.Entities.Contract", null)
+                        .WithMany("Deliveries")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ContractManager.Domain.Entities.ContractDutyRelease", b =>
+                {
+                    b.HasOne("ContractManager.Domain.Entities.Contract", null)
+                        .WithMany("DutyReleases")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ContractManager.Domain.Entities.ContractFinancialStatement", b =>
+                {
+                    b.HasOne("ContractManager.Domain.Entities.Contract", null)
+                        .WithMany("FinancialStatements")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ContractManager.Domain.Entities.ContractMeeting", b =>
+                {
+                    b.HasOne("ContractManager.Domain.Entities.Contract", "Contract")
+                        .WithMany("Meetings")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contract");
+                });
+
+            modelBuilder.Entity("ContractManager.Domain.Entities.ContractTest", b =>
+                {
+                    b.HasOne("ContractManager.Domain.Entities.Contract", null)
+                        .WithMany("Tests")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ContractManager.Domain.Entities.OCRResult", b =>
+                {
+                    b.HasOne("ContractManager.Domain.Entities.Attachment", "Attachment")
+                        .WithOne("OCRResult")
+                        .HasForeignKey("ContractManager.Domain.Entities.OCRResult", "AttachmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Attachment");
+                });
+
+            modelBuilder.Entity("ContractManager.Domain.Entities.Attachment", b =>
+                {
+                    b.Navigation("OCRResult");
+                });
+
+            modelBuilder.Entity("ContractManager.Domain.Entities.Contract", b =>
+                {
+                    b.Navigation("Correspondences");
+
+                    b.Navigation("Deliveries");
+
+                    b.Navigation("DutyReleases");
+
+                    b.Navigation("FinancialStatements");
+
+                    b.Navigation("Meetings");
+
+                    b.Navigation("Tests");
                 });
 #pragma warning restore 612, 618
         }

@@ -40,9 +40,8 @@ namespace ContractManager.Presentation.ViewModels
 
             var contract = new Contract
             {
-                Title = NewContractTitle,
-                ContractNumber = NewContractNumber,
-                CreatedAt = DateTime.Now
+                ContractTitle = NewContractTitle,
+                ContractNumber = NewContractNumber
             };
 
             await _contractService.AddAsync(contract);

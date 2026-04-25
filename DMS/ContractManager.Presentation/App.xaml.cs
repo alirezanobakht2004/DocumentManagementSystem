@@ -34,6 +34,10 @@ namespace ContractManager.Presentation
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 dbContext.Database.Migrate();
+
+                dbContext.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;");
+                dbContext.Database.ExecuteSqlRaw("PRAGMA synchronous=NORMAL;");
+                dbContext.Database.ExecuteSqlRaw("PRAGMA foreign_keys=ON;");
             }
 
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
@@ -42,7 +46,13 @@ namespace ContractManager.Presentation
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=ContractManager.db"));
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlite(
+                    "Data Source=ContractManager.db;Cache=Shared;Pooling=True;Foreign Keys=True",
+                    sqliteOptions =>
+                    {
+                        sqliteOptions.CommandTimeout(30);
+                    }));
             services.AddScoped<IContractRepository, ContractRepository>();
             services.AddScoped<IContractService, ContractService>();
             services.AddTransient<MainViewModel>();

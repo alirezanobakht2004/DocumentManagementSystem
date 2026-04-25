@@ -27,15 +27,15 @@ namespace ContractManager.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // 1. ایندکس‌گذاری برای ارتباط چندریختی (Polymorphic)
+            // Index برای Polymorphic relation
             modelBuilder.Entity<Attachment>()
                 .HasIndex(a => new { a.RelatedEntityType, a.RelatedEntityId });
 
-            // 2. تنظیم کلید خارجی برای OCRResult
+            // One-to-One Attachment -> OCRResult
             modelBuilder.Entity<OCRResult>()
-                .HasOne<Attachment>()
-                .WithMany()
-                .HasForeignKey(o => o.AttachmentId)
+                .HasOne(o => o.Attachment)
+                .WithOne(a => a.OCRResult)
+                .HasForeignKey<OCRResult>(o => o.AttachmentId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 

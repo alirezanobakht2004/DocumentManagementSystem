@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Buznx1ilv0M=",
+  "dgSpecHash": "uqUUXSiXuAw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\alire\\OneDrive\\Desktop\\DMS\\ContractManager.Application\\ContractManager.Application.csproj",
+  "projectFilePath": "C:\\Users\\alire\\OneDrive\\Desktop\\DocumentManagementSystem\\DMS\\ContractManager.Application\\ContractManager.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\alire\\.nuget\\packages\\microsoft.data.sqlite.core\\8.0.21\\microsoft.data.sqlite.core.8.0.21.nupkg.sha512",
     "C:\\Users\\alire\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.21\\microsoft.entityframeworkcore.8.0.21.nupkg.sha512",
