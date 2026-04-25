@@ -1,0 +1,7 @@
+﻿<UserControl x:Class="ContractManager.Presentation.Views.ContractListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <!-- کدهای UI بعداً اینجا قرار میگیرد -->
+    </Grid>
+</UserControl>

@@ -1,0 +1,36 @@
+﻿<Window x:Class="ContractManager.Presentation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="مدیریت قراردادها" Height="450" Width="800" FlowDirection="RightToLeft" FontFamily="Tahoma">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- فرم ثبت قرارداد -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="عنوان قرارداد:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox Text="{Binding NewContractTitle, UpdateSourceTrigger=PropertyChanged}" Width="150" Margin="0,0,15,0" VerticalContentAlignment="Center"/>
+
+            <TextBlock Text="شماره قرارداد:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox Text="{Binding NewContractNumber, UpdateSourceTrigger=PropertyChanged}" Width="150" Margin="0,0,15,0" VerticalContentAlignment="Center"/>
+
+            <Button Content="ثبت قرارداد" Command="{Binding AddContractCommand}" Width="100" Padding="5"/>
+        </StackPanel>
+
+        <!-- لیست قراردادها -->
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Contracts}" AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="#FFF0F0F0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="شناسه" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="عنوان قرارداد" Binding="{Binding Title}" Width="*"/>
+                <DataGridTextColumn Header="شماره قرارداد" Binding="{Binding ContractNumber}" Width="150"/>
+                <DataGridTextColumn Header="تاریخ ثبت" Binding="{Binding CreatedAt, StringFormat=\{0:yyyy/MM/dd\}}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
